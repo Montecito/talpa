@@ -7,7 +7,7 @@
     #include "linux/utsrelease.h"
   #endif
 #else
-#include "linux/version.h"
+#include "generated/uapi/linux/version.h"
 #endif
 
 int main()

@@ -18,7 +18,7 @@
  */
 
 #define __NO_VERSION__
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <asm/uaccess.h>

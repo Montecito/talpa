@@ -20,7 +20,7 @@
 #define H_LINUXGLUE
 
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/module.h>
 #include <linux/spinlock.h>
 #include <linux/dcache.h>

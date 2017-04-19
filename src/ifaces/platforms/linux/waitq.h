@@ -20,7 +20,7 @@
 #define H_LINUXWAITQ
 
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/sched.h>
 #include <linux/wait.h>
 #include <asm/atomic.h>

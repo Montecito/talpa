@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "autoconf.h"
-#include "linux/version.h"
+#include "generated/uapi/linux/version.h"
 
 int main()
 {

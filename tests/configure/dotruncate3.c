@@ -4,7 +4,7 @@
 
 #include "autoconf.h"
 
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,8,0)
 #include <linux/posix_types.h>

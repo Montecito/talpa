@@ -21,7 +21,7 @@
 
 #include <linux/kernel.h>
 #include <linux/list.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,0)
 #include <linux/rcupdate.h>
 #endif

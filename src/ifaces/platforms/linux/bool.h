@@ -19,7 +19,7 @@
 #ifndef H_LINUXBOOL
 #define H_LINUXBOOL
 
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/types.h>
 
 #ifndef TALPA_HAS_BOOL

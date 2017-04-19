@@ -587,7 +587,7 @@ fi
 #
 # Headers.
 #
-TALPA_LOCATE_HEADER(linux/version.h, $kernelhdrspath)
+TALPA_LOCATE_HEADER(generated/uapi/linux/version.h, $kernelhdrspath)
 
 
 TALPA_LOCATE_HEADER(linux/magic.h, $kernelhdrspath, linuxmagicfound=yes, linuxmagicfound=no)
@@ -752,6 +752,7 @@ AC_MSG_RESULT([${kern_version_code}])
 ## 3.11.10== 199434     0x030b0a (Ubuntu 12.04.4)
 ## 3.12.0 == 199680
 ## 3.13.0 == 199936     0x030d00
+## 4.10.1 == 264705
 ${RM} -f tests/configure/kernversion
 AC_MSG_CHECKING([for kernel version string])
 TALPA_LOCATE_HEADER($utsrelease_h, $kernelhdrspath, cckernrelease="-DSEPARATE_UTS_RELEASE", /bin/true, [quiet])
@@ -1214,7 +1215,7 @@ if test $((kern_version_code)) -ge 132608; then
         AC_MSG_ERROR([not found])
     fi
 
-    if test $((kern_version_code)) -ge 199936; then
+    if test $((kern_version_code)) -ge 199936 && test $((kern_version_code)) -lt 264705; then
         ## 3.13+
         ## Needed to count mount points
         AC_MSG_CHECKING([for __lookup_mnt_last address])

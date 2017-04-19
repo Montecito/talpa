@@ -17,7 +17,7 @@
  *
  */
 
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/kernel.h>
 #include <linux/string.h>
 

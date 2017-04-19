@@ -18,7 +18,7 @@
  */
 
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #define __NO_VERSION__
 #include <linux/module.h>
 #include <linux/slab.h>

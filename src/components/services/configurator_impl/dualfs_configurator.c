@@ -17,7 +17,7 @@
  *
  */
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 
 #include "common/bool.h"
 #define TALPA_SUBSYS "dualfs"

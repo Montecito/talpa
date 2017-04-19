@@ -18,7 +18,7 @@
  */
 
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3,11,0)
 

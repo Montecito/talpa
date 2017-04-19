@@ -20,7 +20,7 @@
 #include <asm/uaccess.h>
 
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/slab.h>
 #include <linux/string.h>
 #include <linux/sysctl.h>

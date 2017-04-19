@@ -20,7 +20,7 @@
 #define H_LINUXQUIRKS
 
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/sched.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,16) || defined TALPA_HAS_HRTIMERS
 #include <linux/ktime.h>

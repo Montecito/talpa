@@ -20,7 +20,7 @@
 #define H_ALLOC
 
 #include <linux/kernel.h>
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include <linux/types.h>
 #include <linux/slab.h>
 #include <linux/vmalloc.h>

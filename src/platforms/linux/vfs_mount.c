@@ -16,7 +16,7 @@
 * write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 *
 */
-#include <linux/version.h>
+#include <generated/uapi/linux/version.h>
 #include "platforms/linux/vfs_mount.h"
 #include "platforms/linux/log.h"
 #include "platforms/linux/glue.h"
