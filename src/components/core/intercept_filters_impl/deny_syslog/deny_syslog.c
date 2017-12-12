@@ -3,7 +3,7 @@
  *
  * TALPA Filesystem Interceptor
  *
- * Copyright (C) 2004-2011 Sophos Limited, Oxford, England.
+ * Copyright (C) 2004-2017 Sophos Limited, Oxford, England.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License Version 2 as published by the Free Software Foundation.
@@ -192,6 +192,13 @@ static void examineFile(const void* self, IEvaluationReport* report, const IPers
         return;
     }
 
+    /* Don't log timeout if error code is unset (allow) */
+    if ( (report->recommendedAction(report) == EIA_Timeout)
+        && (report->errorCode(report->object) != ETIME) )
+    {
+        return;
+    }
+
     opmsg = operationString(info->operation(info));
     actmsg = actionString(report->recommendedAction(report));
 
@@ -210,6 +217,13 @@ static void examineFilesystem(const void* self, IEvaluationReport* report, const
 {
     char* opmsg;
     char* actmsg;
+
+    /* Don't log timeout if error code is unset (allow) */
+    if ( (report->recommendedAction(report) == EIA_Timeout)
+        && (report->errorCode(report->object) != ETIME) )
+    {
+        return;
+    }
 
     opmsg = operationString(info->operation(info));
     actmsg = actionString(report->recommendedAction(report));

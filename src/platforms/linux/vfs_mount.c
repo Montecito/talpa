@@ -3,7 +3,7 @@
 *
 * TALPA Filesystem Interceptor
 *
-* Copyright (C) 2004-2016 Sophos Limited, Oxford, England.
+* Copyright (C) 2004-2017 Sophos Limited, Oxford, England.
 *
 * This program is free software; you can redistribute it and/or modify it under the terms of the
 * GNU General Public License Version 2 as published by the Free Software Foundation.
@@ -62,7 +62,7 @@ struct talpa_mnt_namespace {
          u64 event;
  };
 
- #define PROC_INUM_FROM_MNT_NAMESPACE(x) (x)->ns.inum
+ #define PROC_INUM_FROM_MNT_NAMESPACE(x) ((x) ? (x)->ns.inum : 0)
 
  #elif LINUX_VERSION_CODE >= KERNEL_VERSION(3,8,0)
 struct talpa_mnt_namespace {
@@ -75,7 +75,7 @@ struct talpa_mnt_namespace {
          wait_queue_head_t poll;
          talpa_mnt_namespace_event_t event; /* Changed to u64 in 3.15 */
  };
- #define PROC_INUM_FROM_MNT_NAMESPACE(x) (x)->proc_inum
+ #define PROC_INUM_FROM_MNT_NAMESPACE(x) ((x) ? (x)->proc_inum : 0)
  #else
 struct talpa_mnt_namespace {
     atomic_t        count;
@@ -102,7 +102,12 @@ typedef struct talpa_replacement_mount_struct talpa_mount_struct;
     talpa_mount_struct *mnt_parent;
     struct dentry *mnt_mountpoint;
     struct vfsmount mnt;
- # if LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0)
+/**
+ * After 3.13 task and mount structs switch from full locking to
+ * RCU protection.
+ */
+ # if LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0) \
+    || defined TALPA_HAS_BACKPORTED_MOUNTRCU
     struct rcu_head mnt_rcu;
  # endif
  #ifdef CONFIG_SMP
@@ -248,6 +253,12 @@ int iterateFilesystems(struct vfsmount* root, int (*callback) (struct vfsmount* 
     int ret;
     unsigned m_seq = 1;
 
+    if (unlikely(root == NULL))
+    {
+        err("iterateFilesystems: root == NULL");
+        return 1;
+    }
+
     mnt = real_mount(root);
     talpa_mntget(mnt); /* Take extra reference count for the loop */
     do
@@ -373,6 +384,9 @@ typedef talpa_mount_struct *(*lookup_mnt_last_func)(struct vfsmount *mnt, struct
 #ifdef TALPA_HAVE_LOOKUP_MNT
 typedef talpa_mount_struct *(*lookup_mnt_func)(struct vfsmount *mnt, struct dentry *dentry, int dir);
 #endif
+#ifdef TALPA_HAVE_LOOKUP_MNT2
+typedef talpa_mount_struct *(*lookup_mnt_func)(struct vfsmount *mnt, struct dentry *dentry);
+#endif
 
 /*
  * Mark the function pointer as 'volatile' to avoid gcc bug/error:
@@ -398,6 +412,12 @@ static talpa_mount_struct* talpa_lookup_mnt_last(struct vfsmount *mnt, struct de
 #ifdef TALPA_HAVE_LOOKUP_MNT
     TALPA_PTR_FIX lookup_mnt_func lookup_mnt = (lookup_mnt_func)talpa_get_symbol("__lookup_mnt", (void *)TALPA__LOOKUP_MNT);
     return lookup_mnt(mnt, dentry, 0);
+#endif
+#ifdef TALPA_HAVE_LOOKUP_MNT2
+    /* Change in 4.9 and backported by Ubuntu to 4.4 removes __lookup_mnt_last,
+     * but also reverses the list so that __lookup_mnt is actually what we want */
+    TALPA_PTR_FIX lookup_mnt_func lookup_mnt = (lookup_mnt_func)talpa_get_symbol("__lookup_mnt", (void *)TALPA__LOOKUP_MNT);
+    return lookup_mnt(mnt, dentry);
 #endif
     return NULL;
 }

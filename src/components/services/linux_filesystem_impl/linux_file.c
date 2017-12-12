@@ -4,7 +4,7 @@
 *
 * TALPA Filesystem Interceptor
 *
-* Copyright (C) 2004-2016 Sophos Limited, Oxford, England.
+* Copyright (C) 2004-2017 Sophos Limited, Oxford, England.
 *
 * This program is free software; you can redistribute it and/or modify it under the terms of the
 * GNU General Public License Version 2 as published by the Free Software Foundation.
@@ -19,7 +19,6 @@
 */
 #include <linux/kernel.h>
 #include <linux/version.h>
-#include <asm/uaccess.h>
 #include <linux/slab.h>
 #include <linux/file.h>
 #include <linux/sched.h>
@@ -50,6 +49,7 @@
 #include "linux_file.h"
 #include "platforms/linux/glue.h"
 #include "platforms/linux/alloc.h"
+#include "platforms/linux/uaccess.h"
 
 
 /*
@@ -331,7 +331,11 @@ static int openDentry(void* self, void* object1, void* object2, unsigned int fla
 #ifdef current_cred /* Introduced in 2.6.29. */
  #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0)
     {
-       struct path path = { mnt,dentry };
+#  if LINUX_VERSION_CODE >= KERNEL_VERSION(4,13,0)
+       struct path path = { .mnt=mnt, .dentry=dentry };
+#  else
+       struct path path = { mnt, dentry };
+#  endif
        path_get(&path);
        file = dentry_open (&path,flags,current_cred());
        path_put(&path);

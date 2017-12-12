@@ -3,7 +3,7 @@
 ##
 ## TALPA Filesystem Interceptor
 ##
-## Copyright (C) 2004-2014 Sophos Limited, Oxford, England.
+## Copyright (C) 2004-2017 Sophos Limited, Oxford, England.
 ##
 ## This program is free software; you can redistribute it and/or modify it under the terms of the
 ## GNU General Public License Version 2 as published by the Free Software Foundation.
@@ -61,6 +61,7 @@ check_PROGRAMS +=   chkstdinterceptor \
                     chkexclusionioctl1 \
                     chkexclusionioctl2 \
                     chkexclusionioctl3 \
+                    chk_allowsyslog3 \
                     chk_denysyslog3 \
                     chk_denysyslog4 \
                     chk_thrdinfo \
@@ -125,7 +126,14 @@ check_PROGRAMS +=   chkstdinterceptor \
                     tlp-8-002 \
                     tlp-8-003 \
                     tlp-8-004 \
-                    chk_chroot
+                    chk_chroot \
+                    chk_bind1
+
+if TESTNAMESPACES
+check_PROGRAMS +=   chk_namespace \
+                    chk_container
+endif
+
 
 PTHREAD_FLAG = -pthread
 
@@ -176,6 +184,7 @@ chkexclusionioctl_SOURCES = chkexclusionioctl.c
 chkexclusionioctl1_SOURCES = chkexclusionioctl1.c
 chkexclusionioctl2_SOURCES = chkexclusionioctl2.c
 chkexclusionioctl3_SOURCES = chkexclusionioctl3.c
+chk_allowsyslog3_SOURCES = chk_allowsyslog3.c tlp-log-search.c
 chk_denysyslog3_SOURCES = chk_denysyslog3.c tlp-log-search.c
 chk_denysyslog4_SOURCES = chk_denysyslog4.c tlp-log-search.c
 chk_thrdinfo_SOURCES = chk_thrdinfo.c
@@ -297,6 +306,15 @@ tlp_8_004_CFLAGS = $(USERSPACE_C_FLAGS)
 chk_chroot_SOURCES = chk_chroot.c ../clients/vc-lib.c ../clients/talpa.c
 chk_chroot_CFLAGS = $(USERSPACE_C_FLAGS)
 
+chk_namespace_SOURCES = chk_namespace.c ../clients/vc-lib.c ../clients/talpa.c
+chk_namespace_CFLAGS = $(USERSPACE_C_FLAGS)
+
+chk_container_SOURCES = chk_container.c ../clients/vc-lib.c ../clients/talpa.c
+chk_container_CFLAGS = $(USERSPACE_C_FLAGS)
+
+chk_bind1_SOURCES = chk_bind1.c ../clients/vc-lib.c ../clients/talpa.c
+chk_bind1_CFLAGS = $(USERSPACE_C_FLAGS)
+
 if LOADTEST
 
 check_PROGRAMS +=  reiserfsmnt
@@ -317,6 +335,7 @@ TESTS                   = tlp-init.sh \
                           tlp_dualfsdisable.sh \
                           tlp_dualfsenable.sh \
                           chklinuxvfs.sh
+
 if BINARYSYSCTL
 TESTS +=                  sysctldisable.sh \
                           sysctlenable.sh \
@@ -345,6 +364,7 @@ TESTS +=                  chkstdinterceptor.sh \
                           chkexclusionioctl1.sh \
                           chkexclusionioctl2.sh \
                           chkexclusionioctl3.sh \
+                          chk_allowsyslog3.sh \
                           chk_denysyslog.sh \
                           chk_denysyslog1.sh \
                           chk_denysyslog2.sh \
@@ -373,7 +393,7 @@ TESTS +=                  chkstdinterceptor.sh \
 
 if TESTXWORKAROUND
 TESTS +=                  chk_vettingctrl10.sh \
-						  chk_vettingctrl11.sh
+                          chk_vettingctrl11.sh
 endif
 
 TESTS +=                  chk_vettingctrl12.sh \
@@ -456,17 +476,28 @@ TESTS +=                  chkext2fops.sh \
                           chkminix1.sh \
                           chkminix2.sh \
                           chk_lsattr.sh \
-                          chk_chroot.sh \
+                          chk_chroot.sh
+
+if TESTNAMESPACES
+TESTS +=                  chk_namespace.sh \
+                          chk_container.sh
+endif
+
+TESTS +=                  chk_bind.sh \
+                          chk_bind1.sh \
+                          chk_bind2.sh \
+                          chk_bind3.sh \
+                          chk_move.sh \
                           tlp-cleanup.sh
 
 check_SCRIPTS =           $(TESTS) \
-			  sysctldisable.sh \
-			  sysctlenable.sh \
-			  sysctlchk.sh \
-			  tlp-4-003a.sh \
-			  tlp-4-003b.sh \
-			  tlp-4-004a.sh \
-			  tlp-4-004b.sh \
+                          sysctldisable.sh \
+                          sysctlenable.sh \
+                          sysctlchk.sh \
+                          tlp-4-003a.sh \
+                          tlp-4-003b.sh \
+                          tlp-4-004a.sh \
+                          tlp-4-004b.sh \
                           getsysstats.pl \
                           talpa-init.sh \
                           tlp-init.sh \

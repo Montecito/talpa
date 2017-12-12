@@ -3,7 +3,7 @@
  *
  * TALPA Filesystem Interceptor
  *
- * Copyright (C) 2004-2011 Sophos Limited, Oxford, England.
+ * Copyright (C) 2004-2017 Sophos Limited, Oxford, England.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License Version 2 as published by the Free Software Foundation.
@@ -26,11 +26,11 @@
 #include <linux/unistd.h>
 #include <linux/slab.h>
 #include <linux/string.h>
-#include <asm/uaccess.h>
 #include <asm/errno.h>
 
 #include "tlp-test.h"
 
+#include "platform/uaccess.h"
 
 #include "common/bool.h"
 #define TALPA_SUBSYS "syslogtest"
@@ -95,6 +95,10 @@ int talpa_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsign
     {
         case TALPA_TEST_SET_EVAL_CODE:
             erep->i_IEvaluationReport.setRecommendedAction(erep,parm);
+            ret = 0;
+            break;
+        case TALPA_TEST_SET_ERROR_CODE:
+            erep->i_IEvaluationReport.setErrorCode(erep,parm);
             ret = 0;
             break;
         case TALPA_TEST_FILEINFO:

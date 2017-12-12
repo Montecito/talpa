@@ -39,6 +39,7 @@ EXTRA_CFLAGS += -I$(src)/../../src -I$(src)/../../src/ifaces -I$(src)/../../incl
 		@vfsmntlock@ \
 		@samefile@ \
 		@filldirbackport@ \
+		@mountrcubackport@ \
 		@probe_kernel_read@ \
 		@binarysysctl@ \
 		@securityfs@ \
@@ -48,7 +49,9 @@ EXTRA_CFLAGS += -I$(src)/../../src -I$(src)/../../src/ifaces -I$(src)/../../incl
 		@getname@ \
 		@vfsunlink@ \
 		@lookup_mnt_last@ \
-		@vfsmount_namespace@
+		@get_fs_root_and_pwd@ \
+		@vfsmount_namespace@ \
+        @compile_flags@
 
 obj-m :=    tlp-personality.o \
             tlp-fileinfo.o \
@@ -57,6 +60,7 @@ obj-m :=    tlp-personality.o \
             tlp-stdinterceptor.o \
             tlp-inclusion.o \
             tlp-opexcl.o \
+            tlp-allowsyslog.o \
             tlp-denysyslog.o \
             tlp-threadinfo.o \
             tlp-exclusion.o \
@@ -92,6 +96,7 @@ tlp-dualfs-objs := $(tlpDualfsOBJS)
 tlp-stdinterceptor-objs := $(tlpStdInterceptorOBJS)
 tlp-inclusion-objs := $(tlpInclusionOBJS)
 tlp-opexcl-objs := $(tlpOpExclOBJS)
+tlp-allowsyslog-objs := $(tlpAllowSyslogOBJS)
 tlp-denysyslog-objs := $(tlpDenySyslogOBJS)
 tlp-threadinfo-objs := $(tlpThreadInfoOBJS)
 tlp-exclusion-objs := $(tlpExclusionOBJS)

@@ -2,7 +2,7 @@
 #
 # TALPA test script
 #
-# Copyright (C) 2004-2011 Sophos Limited, Oxford, England.
+# Copyright (C) 2004-2017 Sophos Limited, Oxford, England.
 #
 # This program is free software; you can redistribute it and/or modify it under the terms of the
 # GNU General Public License Version 2 as published by the Free Software Foundation.
@@ -41,6 +41,7 @@ then
     mount | grep /tmp/tlp-test
     [ -d /tmp/tlp-test/mnt1 ] && umount /tmp/tlp-test/mnt1 2>/dev/null
     [ -d /tmp/tlp-test/mnt2 ] && umount /tmp/tlp-test/mnt2 2>/dev/null
+    </proc/mounts cut -f2 | grep /tmp/tlp-test | xargs -r umount 2>/dev/null
     rm -rf /tmp/tlp-test 2>/dev/null
 fi
 true
